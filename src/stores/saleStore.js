@@ -23,7 +23,7 @@ export const useSaleStore = defineStore("saleStore", () => {
 
 
             if (res.status !== 201) {
-                return { success: false, message: res?.data?.message }
+                throw new Error("Error initiating new sale: ", res.data?.message)
             }
 
             console.log("initialized sale transaction")
@@ -36,7 +36,7 @@ export const useSaleStore = defineStore("saleStore", () => {
 
         } catch (err) {
             const msg = err.response?.data?.message || err.message || "Unkown initiate Transaction sale error"
-            console.error(`initiate Sale error: ${msg}`)
+            console.error(`initiate Sale error: ${msg}: ${err}`)
             return { success: false, message: msg }
         }
     }
@@ -47,7 +47,7 @@ export const useSaleStore = defineStore("saleStore", () => {
             const res = await appClient.get("/sale/sale-transaction")
 
             if (res.status !== 200) {
-                return { success: false, message: res?.data?.message }
+                throw new Error("Error fetching all sale transaction", res.data?.message)
             }
 
             console.log(res?.data?.sales)
@@ -56,7 +56,7 @@ export const useSaleStore = defineStore("saleStore", () => {
             return { success: true, message: res.data?.message }
         } catch (err) {
             const msg = err.response?.data?.message || err.message || "Unkown fetch Transaction sale error"
-            console.error(`fetch transaction Sale error: ${msg}`)
+            console.error(`fetch transaction Sale error: ${msg}: ${err}`)
             return { success: false, message: msg }
         }
     }
@@ -70,8 +70,7 @@ export const useSaleStore = defineStore("saleStore", () => {
             const res = await appClient(`/sale/sale-transaction/${saleId}`)
 
             if (res.status !== 200) {
-                console.error(res?.data?.message)
-                return { success: false, message: res?.data?.message }
+                throw new Error("fetch sale transaction error: ", res.data?.message)
             }
 
             sale.value = res?.data?.sale
@@ -79,7 +78,7 @@ export const useSaleStore = defineStore("saleStore", () => {
             return { success: true, message: res?.data?.message }
         } catch (err) {
             const msg = err.response?.data?.message || err.message || "Unkown fetch Transaction sale error"
-            console.error(`fetch transaction Sale error: ${msg}`)
+            console.error(`fetch transaction Sale error: ${msg}: ${err}`)
             return { success: false, message: msg }
         }
     }
@@ -97,7 +96,7 @@ export const useSaleStore = defineStore("saleStore", () => {
             )
 
             if (res.status !== 200) {
-                return { success: false, message: res?.data?.message }
+                throw new Error("add item to sale error: ", res.data?.message)
             }
 
             await fetchSaleTransaction(saleId)
@@ -110,7 +109,7 @@ export const useSaleStore = defineStore("saleStore", () => {
                 err.message ||
                 "Unknown add item to sale transaction error"
 
-            console.error(`addItemToSale error: ${msg}`)
+            console.error(`addItemToSale error: ${msg}: ${err}`)
             return { success: false, message: msg }
 
         } finally {
@@ -137,15 +136,14 @@ export const useSaleStore = defineStore("saleStore", () => {
             const res = await appClient.put(`/sale/sale-transaction/decrement-item/${saleId}`, { sku })
 
             if (res.status !== 200) {
-                console.log(res.data?.message)
-                throw new Error(res.data?.message)
+                throw new Error("decrement item quantity error: ", res.data?.message)
             }
 
             return { success: true, message: res.data?.message }
 
         } catch (err) {
             const msg = err.response?.data?.message || err.message || "Unkown decrement transaction items quantity error"
-            console.error(`decrement transaction items quantity error: ${msg}`)
+            console.error(`decrementItemQuantity error: ${msg}: ${err}`)
             return { success: false, message: msg }
         }
     }
@@ -157,8 +155,7 @@ export const useSaleStore = defineStore("saleStore", () => {
             const res = await appClient.put(`/sale/sale-transaction/remove-item/${saleId}`, { sku })
 
             if (res.status !== 200) {
-                console.error(res.data?.message)
-                throw new Error(res.data?.message)
+                throw new Error("removeItemFromSale error: ", res.data?.message)
             }
 
             return { success: true, message: res.data?.message }
