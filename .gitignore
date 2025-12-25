@@ -39,3 +39,5 @@ __screenshots__/
 .netlify
 
 .env
+.env.production
+.env.deployment
