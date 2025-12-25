@@ -1,0 +1,22 @@
+<template>
+  <svg
+    width="28"
+    height="28"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    transform=""
+    id="injected-svg"
+  >
+    <!-- Boxicons v3.0 https://boxicons.com | License  https://docs.boxicons.com/free -->
+    <path
+      d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2M5 19V5h14v14z"
+    />
+    <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4z" />
+  </svg>
+</template>
+
+<script setup>
+</script>
+
+<style lang="scss" scoped>
+</style>
