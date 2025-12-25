@@ -45,7 +45,7 @@ onMounted(fetchAllProducts)
     <div id="head" class="d-flex flex-column align-center pa-2">
       <span>products</span>
     </div>
-    <div v-if="products.length" id="p-cont" class="w-100">
+    <div v-if="products?.length" id="p-cont" class="w-100">
       <div
         v-for="p in products"
         :key="p._id"
