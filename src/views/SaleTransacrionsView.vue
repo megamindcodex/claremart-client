@@ -15,18 +15,12 @@ const { allSales } = storeToRefs(saleStore)
 onMounted(async () => {
   try {
     await fetchAllSaleTransaction()
+
+    console.log(allSales.value)
   } catch (err) {
     console.error('Failed to fetch sales:', err)
   }
 })
-
-// onMounted(async () => {
-//   try {
-//     await fetchAllSaleTransaction()
-//   } catch (err) {
-//     console.error('Failed to fetch sales:', err)
-//   }
-// })
 </script>
 
 <template>

@@ -50,9 +50,9 @@ export const useSaleStore = defineStore("saleStore", () => {
                 throw new Error("Error fetching all sale transaction", res.data?.message)
             }
 
-            console.log(res?.data?.sales)
 
             allSales.value = res.data?.sales
+            console.log(res?.data?.sales)
             return { success: true, message: res.data?.message }
         } catch (err) {
             const msg = err.response?.data?.message || err.message || "Unkown fetch Transaction sale error"
