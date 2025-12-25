@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import appClient from "@/api/axiosConfig";
 import { ref } from "vue";
-import { useRouter } from "vuetify/lib/composables/router";
+import { useRouter } from "vue-router";
 
 // import { useNavigatorStore } from "./navigator"
 

@@ -35,7 +35,7 @@ onMounted(async () => {
       <PluseIconSvg />
       <span>new sale</span>
     </div>
-    <div class="col" v-if="allSales.length > 0">
+    <div class="col" v-if="allSales?.length > 0">
       <v-card
         v-for="sale in allSales"
         :key="sale._id"

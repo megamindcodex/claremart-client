@@ -14,7 +14,7 @@ const { displayNotification } = notifyStore
 
 const saleStore = useSaleStore()
 const { fetchSaleTransaction, addItemToSale, decrementItemQantity, remoteItemFromSale } = saleStore
-const { sale, notif } = storeToRefs(saleStore)
+const { sale } = storeToRefs(saleStore)
 
 const route = useRoute()
 
@@ -106,7 +106,7 @@ onMounted(async () => {
           <td>${{ item.unitPrice }}</td>
           <td>{{ item.quantity }}</td>
           <td>${{ item.lineTotal }}</td>
-          <div class="action">
+          <td class="action">
             <button
               variant="outlined"
               v-ripple="{ class: 'text-black' }"
@@ -128,7 +128,7 @@ onMounted(async () => {
             >
               <span>x</span>
             </button>
-          </div>
+          </td>
         </tr>
         <div class="item-loader" v-if="isLoading">
           <v-progress-circular :size="50" color="white" indeterminate></v-progress-circular>

@@ -25,6 +25,7 @@ export const useProductStore = defineStore("productStore", () => {
 
         } catch (err) {
             const msg = err.response?.data?.message || err.message || "Unkown fetchAllProduct error"
+            console.error(`fetchAllProducts error: ${msg}`)
         }
     }
 

@@ -10,7 +10,7 @@ import SaleTransactionItems from '@/components/SaleTransactionItems.vue'
 const route = useRoute()
 
 const saleStore = useSaleStore()
-const { sale, notif } = storeToRefs(saleStore)
+const { sale } = storeToRefs(saleStore)
 </script>
 
 <template>
