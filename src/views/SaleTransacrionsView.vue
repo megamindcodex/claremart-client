@@ -5,12 +5,32 @@ import PluseIconSvg from '../assets/icons/PluseIconSvg.vue'
 import { storeToRefs } from 'pinia'
 import { useNavigatorStore } from '@/stores/navigator'
 import { onMounted } from 'vue'
+import { useNotifyStore } from '@/stores/notifyStore'
+import { ref } from 'vue'
 
 const { navigateTo } = useNavigatorStore()
+
+const notifyStore = useNotifyStore()
+const { displayNotification } = notifyStore
 
 const saleStore = useSaleStore()
 const { initiateTransactionSale, fetchAllSaleTransaction } = saleStore
 const { allSales } = storeToRefs(saleStore)
+
+const isLoading = ref(false)
+
+const handle_initiatTransactionSale = async () => {
+  try {
+    isLoading.value = true
+    const result = await initiateTransactionSale()
+    isLoading.value = false
+
+    displayNotification({ type: 'info', message: result.message })
+  } catch (err) {
+    console.error(err.message)
+    displayNotification({ type: 'error', message: err.message })
+  }
+}
 
 onMounted(async () => {
   try {
@@ -25,9 +45,10 @@ onMounted(async () => {
 
 <template>
   <div class="cont pt-5 px-4">
-    <div id="new-sale-cont" @click="initiateTransactionSale">
-      <PluseIconSvg />
-      <span>new sale</span>
+    <div id="new-sale-cont" @click="handle_initiatTransactionSale()">
+      <PluseIconSvg v-show="!isLoading" />
+      <span v-show="!isLoading">new sale</span>
+      <span v-show="isLoading">Initiating new sale transaction...</span>
     </div>
     <div class="col" v-if="allSales?.length > 0">
       <v-card
@@ -40,8 +61,9 @@ onMounted(async () => {
         <div>
           <small id="id-txt">ID: {{ sale._id }}</small>
         </div>
-        <div id="status" class="bg-success">
-          <span class="pa-2">status: {{ sale.status }}</span>
+        <div id="status" class="d-flex flex-row ga-2 w-100">
+          <span>status</span>
+          <v-chip :class="sale.status" variant="outlined">{{ sale.status }}</v-chip>
         </div>
         <div id="sum">
           <span>sub: {{ sale.subtotal }}</span>
@@ -65,17 +87,14 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  /* border: 1px solid red; */
   justify-content: center;
   align-items: center;
 }
 
 .col {
   width: 100%;
-  max-width: 500px;
-  /* border: 1px solid black; */
   display: flex;
-  justify-content: center;
+  flex-direction: column;
 }
 
 #new-sale-cont {
@@ -140,5 +159,20 @@ onMounted(async () => {
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.CANCELED {
+  background-color: #8b8888;
+  color: #fff;
+}
+
+.CLOSED {
+  background-color: #2c80c5;
+  color: #fff;
+}
+
+.OPEN {
+  background-color: #2eb556;
+  color: #fff;
 }
 </style>
