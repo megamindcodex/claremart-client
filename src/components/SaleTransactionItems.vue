@@ -108,7 +108,7 @@ onMounted(async () => {
         </tr>
       </thead>
       <tbody v-if="sale.items?.length" id="item-cont">
-        <tr v-for="item in sale.items" :key="item._id">
+        <tr v-for="item in sale.items" :key="item.sku">
           <td>{{ item.name }}</td>
           <td>${{ item.unitPrice }}</td>
           <td>{{ item.quantity }}</td>

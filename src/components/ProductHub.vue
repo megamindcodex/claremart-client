@@ -76,7 +76,7 @@ const handle_generateInvoice = async () => {
     isgenerating.value = false
 
     setTimeout(() => {
-      navigateTo('/invoice')
+      navigateTo(`/receipt/${saleId}`)
     }, 3000)
 
     displayNotification({ type: 'success', message: result.message })

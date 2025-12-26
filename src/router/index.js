@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import SaleTransacrionsView from '@/views/SaleTransacrionsView.vue'
 import SaleDetail from '@/views/SaleDetail.vue'
-import InvoiceView from '@/views/InvoiceView.vue'
+import ReceiptView from '@/views/ReceiptView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,9 +22,9 @@ const router = createRouter({
       component: SaleDetail
     },
     {
-      path: "/invoice",
-      name: "invoice",
-      component: InvoiceView
+      path: "/receipt/:saleId",
+      name: "receipt",
+      component: ReceiptView
     }
   ],
 })
