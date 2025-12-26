@@ -20,12 +20,13 @@ export const useProductStore = defineStore("productStore", () => {
                 throw new Error(res.data?.message || "fetch all product Failed") // Manually Throw Error into the catch block to be handled properly
             }
 
-            products.value = res.data
-            // console.log(products.value)
+            products.value = res.data?.products
+            return { success: true, message: res.data?.message }
 
         } catch (err) {
             const msg = err.response?.data?.message || err.message || "Unkown fetchAllProduct error"
             console.error(`fetchAllProducts error: ${msg}`)
+            return { success: false, message: msg }
         }
     }
 

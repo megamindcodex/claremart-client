@@ -22,10 +22,6 @@ export const useSaleStore = defineStore("saleStore", () => {
             const res = await appClient.post("/sale/initiate-sale")
 
 
-            if (res.status !== 201) {
-                throw new Error("Error initiating new sale: ", res.data?.message)
-            }
-
             console.log("initialized sale transaction")
             console.log(res?.data?.sale)
 
@@ -46,9 +42,6 @@ export const useSaleStore = defineStore("saleStore", () => {
         try {
             const res = await appClient.get("/sale/sale-transaction")
 
-            if (res.status !== 200) {
-                throw new Error("Error fetching all sale transaction", res.data?.message)
-            }
 
 
             allSales.value = res.data?.sales
@@ -69,9 +62,7 @@ export const useSaleStore = defineStore("saleStore", () => {
             console.log(saleId)
             const res = await appClient(`/sale/sale-transaction/${saleId}`)
 
-            if (res.status !== 200) {
-                throw new Error("fetch sale transaction error: ", res.data?.message)
-            }
+
 
             sale.value = res?.data?.sale
             // console.log(sale.value)
@@ -87,17 +78,16 @@ export const useSaleStore = defineStore("saleStore", () => {
 
 
     const addItemToSale = async (saleId, sku) => {
-        isLoading.value = true
-
+        if (sale.value.status !== "OPEN") {
+            return { message: "cannot edit this sale transaction" }
+        }
         try {
             const res = await appClient.post(
                 `/sale/sale-transaction/add-item/${saleId}`,
                 { sku }
             )
 
-            if (res.status !== 200) {
-                throw new Error("add item to sale error: ", res.data?.message)
-            }
+
 
             await fetchSaleTransaction(saleId)
 
@@ -112,32 +102,40 @@ export const useSaleStore = defineStore("saleStore", () => {
             console.error(`addItemToSale error: ${msg}: ${err}`)
             return { success: false, message: msg }
 
-        } finally {
-            isLoading.value = false
         }
     }
 
 
 
 
-    const clearTransactionSaleItems = async () => {
+    const clearTransactionSaleItems = async (saleId) => {
         try {
+            const res = await appClient.put(`/sale/sale-transaction/clear-items/${saleId}`)
 
+
+
+            sale.value.items = []
+            sale.value.subtotal = 0
+            sale.value.tax = 0
+            sale.value.grandTotal = 0
+            return { success: true, message: res.data?.message }
         } catch (err) {
             const msg = err.response?.data?.message || err.message || "Unkown clear transaction sale items error"
-            console.error(`clear transaction items Sale error: ${msg}`)
+            console.error(`clareTransactionSaleItems error: ${msg}`)
             return { success: false, message: msg }
         }
     }
 
 
     const decrementItemQantity = async (saleId, sku) => {
+        console.log(sale.value.status)
+        if (sale.value.status !== "OPEN") {
+            return { message: "cannot edit this sale transaction" }
+        }
+
         try {
             const res = await appClient.put(`/sale/sale-transaction/decrement-item/${saleId}`, { sku })
 
-            if (res.status !== 200) {
-                throw new Error("decrement item quantity error: ", res.data?.message)
-            }
 
             return { success: true, message: res.data?.message }
 
@@ -151,20 +149,73 @@ export const useSaleStore = defineStore("saleStore", () => {
 
 
     const remoteItemFromSale = async (saleId, sku) => {
+        if (sale.value.status !== "OPEN") {
+            return { message: "cannot edit this sale transaction" }
+        }
         try {
             const res = await appClient.put(`/sale/sale-transaction/remove-item/${saleId}`, { sku })
 
-            if (res.status !== 200) {
-                throw new Error("removeItemFromSale error: ", res.data?.message)
-            }
-
             return { success: true, message: res.data?.message }
         } catch (err) {
-            const msg = err.response?.data?.message || err.message || "Unkown remove transaction sale items error"
+            const msg = err.response?.data?.message || err.message || "Unkown RemoveItemFromSale error"
             console.error(`remove transaction sale items error: ${msg}`)
             return { success: false, message: msg }
         }
     }
+
+
+
+
+    const updateSaleStatus = async (saleId, status) => {
+        try {
+            console.log(saleId)
+            console.log(status)
+
+            if (!saleId) {
+                throw new Error(`saleId is ${saleId}`)
+            }
+
+            if (!status) {
+                throw new Error(`statua is ${status}`)
+            }
+
+            const res = await appClient.put(`/sale/sale-transaction/update-sale-status/${saleId}`, { status })
+
+
+            console.log(saleId)
+            await fetchSaleTransaction(saleId)
+            return { success: true, message: res.data?.message }
+        } catch (err) {
+            const msg = err.response?.data?.message || err.message || "Unkown updateSaleStatus error"
+            console.error(`updateSaleStatus error: ${msg}`)
+            return { success: false, message: msg }
+        }
+    }
+
+
+    const generateInvoice = async (saleId, status) => {
+        try {
+
+            const res = await updateSaleStatus(saleId, status)
+
+            return { success: true, message: "Invoice generated successfully" }
+        } catch (err) {
+            const msg =
+                err.response?.data?.message ||
+                err.message ||
+                "Unknown generateInvoice error"
+
+            console.error(`generateInvoice error: ${msg}`)
+            return { success: false, message: msg }
+        }
+    }
+
+
+
+
+
+
+
 
 
 
@@ -181,6 +232,7 @@ export const useSaleStore = defineStore("saleStore", () => {
         clearTransactionSaleItems,
         decrementItemQantity,
         remoteItemFromSale,
-
+        generateInvoice,
+        updateSaleStatus
     }
 })

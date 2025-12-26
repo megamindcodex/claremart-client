@@ -6,7 +6,7 @@ import { onMounted } from 'vue'
 import { useNotifyStore } from './stores/notifyStore'
 
 const notifyStore = useNotifyStore()
-// const { displayNotification } = notifyStore
+const { displayNotification } = notifyStore
 const { display, notification } = storeToRefs(notifyStore)
 
 const { fetchAllProducts } = useProductStore()
@@ -19,9 +19,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- <button @click="display = !display">display notification</button> -->
+  <!-- <button @click="displayNotification({ type: 'info', message: 'notify testing Testing' })">
+    display notification
+  </button> -->
   <div id="notification" v-if="display">
-    <span>{{ notification.message }}</span>
+    <span :class="notification.type">{{ notification.message }}</span>
   </div>
   <RouterView />
 </template>
@@ -39,7 +41,19 @@ onMounted(() => {
 
 #notification span {
   padding: 5px 20px;
-  background-color: red;
   border-radius: 20px;
+}
+
+.info {
+  color: #9165f7;
+  background-color: #e0d5f9;
+}
+.success {
+  color: #26af58;
+  background-color: #acf9c8;
+}
+.error {
+  color: #f32424;
+  background-color: #f09797;
 }
 </style>

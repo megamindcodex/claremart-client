@@ -22,11 +22,11 @@ const { sale } = storeToRefs(saleStore)
     </div>
 
     <div id="content" class="d-flex">
-      <div id="sale-items">
-        <SaleTransactionItems />
-      </div>
       <div id="products">
         <ProductHub />
+      </div>
+      <div id="sale-items">
+        <SaleTransactionItems />
       </div>
     </div>
   </div>
@@ -38,6 +38,8 @@ const { sale } = storeToRefs(saleStore)
   position: relative;
   width: 100%;
   display: flex;
+  justify-content: center;
+  /* align-items: center; */
   flex-direction: column;
 }
 
@@ -48,7 +50,8 @@ const { sale } = storeToRefs(saleStore)
 #content {
   display: flex;
   gap: 5px;
-  max-width: 870px;
+  max-width: 872px;
+  align-self: center;
   /* flex-direction: column-reverse; */
 }
 

@@ -7,6 +7,9 @@ import { useRoute } from 'vue-router'
 import { useNotifyStore } from '@/stores/notifyStore'
 
 import CancleIconSvg from '@/assets/icons/cancelIconSvg.vue'
+import AddPluseIcon from '@/assets/icons/AddPluseIcon.vue'
+import MinusIcon from '@/assets/icons/MinusIcon.vue'
+import CloseIcon from '@/assets/icons/CloseIcon.vue'
 import { ref } from 'vue'
 
 const notifyStore = useNotifyStore()
@@ -34,6 +37,7 @@ const handleAddItem = async (sku) => {
     displayNotification({ type: 'success', message: result.message })
     console.log(result.message)
   } catch (err) {
+    displayNotification({ type: 'error', message: result.message })
     console.log(err.message)
   }
 }
@@ -50,10 +54,11 @@ const handleDecrementItemQantity = async (sku) => {
     isLoading.value = false
 
     await fetchSaleTransaction(saleId)
-    displayNotification({ type: 'success', message: result.message })
+    displayNotification({ type: 'info', message: result.message })
 
     console.log(result.message)
   } catch (err) {
+    displayNotification({ type: 'error', message: result.message })
     console.error(err.message)
   }
 }
@@ -71,11 +76,12 @@ const handleRemoteItemFromSale = async (sku) => {
     isLoading.value = false
 
     await fetchSaleTransaction(saleId)
-    displayNotification({ type: 'success', message: result.message })
 
+    displayNotification({ type: 'info', message: result.message })
     console.log(result.message)
   } catch (err) {
-    // console.error(err.message)
+    displayNotification({ type: 'error', message: result.message })
+    console.error(err.message)
   }
 }
 
@@ -98,6 +104,7 @@ onMounted(async () => {
           <th>unit-price</th>
           <th>quantity</th>
           <th>line-total</th>
+          <th>#</th>
         </tr>
       </thead>
       <tbody v-if="sale.items?.length" id="item-cont">
@@ -106,28 +113,20 @@ onMounted(async () => {
           <td>${{ item.unitPrice }}</td>
           <td>{{ item.quantity }}</td>
           <td>${{ item.lineTotal }}</td>
-          <td class="action">
-            <button
-              variant="outlined"
-              v-ripple="{ class: 'text-black' }"
-              @click="handleAddItem(item.sku)"
-            >
-              <span>+</span>
-            </button>
-            <button
-              variant="outlined"
-              v-ripple="{ class: 'text-black' }"
-              @click="handleDecrementItemQantity(item.sku)"
-            >
-              <span>-</span>
-            </button>
-            <button
-              variant="outlined"
-              v-ripple="{ class: 'text-black' }"
-              @click="handleRemoteItemFromSale(item.sku)"
-            >
-              <span>x</span>
-            </button>
+          <td>
+            <div class="action d-flex">
+              <AddPluseIcon
+                id="add-plus-icon"
+                v-ripple="{ class: 'text-black' }"
+                @click="handleAddItem(item.sku)"
+              />
+              <MinusIcon id="minus-icon" @click="handleDecrementItemQantity(item.sku)" />
+              <CloseIcon
+                id="close-icon"
+                v-ripple="{ class: 'text-black' }"
+                @click="handleRemoteItemFromSale(item.sku)"
+              />
+            </div>
           </td>
         </tr>
         <div class="item-loader" v-if="isLoading">
@@ -154,6 +153,10 @@ onMounted(async () => {
   width: 100%;
 }
 
+.thead {
+  border: 1px solid green;
+}
+
 #item-cont {
   width: 100%;
   height: 100%;
@@ -161,25 +164,41 @@ onMounted(async () => {
 
 .table {
   border: 1px solid #000;
+  width: 100%;
 }
 
 .action {
   position: relative;
-  top: 4px;
-  width: 100%;
-  /* height: 100%; */
+  right: 15px;
   display: flex;
-  gap: 4px;
+  gap: 10px;
   flex-direction: column;
+  justify-content: center;
 }
 
-.action button {
-  height: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #000;
-  padding: 0px 5px;
+#add-plus-icon {
+  width: 16px;
+  height: 16px;
+  stroke: #000000;
+  stroke-width: 2.5;
+  border: none;
+}
+
+#minus-icon {
+  width: 16px;
+  height: 16px;
+  stroke: #000000;
+  stroke-width: 2.5;
+}
+
+#close-icon {
+  position: absolute;
+  top: -6px;
+  right: -30px;
+  width: 16px;
+  height: 16px;
+  stroke-width: 1.5;
+  stroke: #000000;
 }
 
 tbody {
@@ -187,7 +206,8 @@ tbody {
 }
 
 td {
-  font-size: 12px;
+  position: relative;
+  font-size: 0.8em;
 }
 
 .item-loader {
