@@ -45,7 +45,7 @@ export const useSaleStore = defineStore("saleStore", () => {
 
 
             allSales.value = res.data?.sales
-            console.log(res?.data?.sales)
+            // console.log(res?.data?.sales)
             return { success: true, message: res.data?.message }
         } catch (err) {
             const msg = err.response?.data?.message || err.message || "Unkown fetch Transaction sale error"
@@ -58,8 +58,8 @@ export const useSaleStore = defineStore("saleStore", () => {
 
     const fetchSaleTransaction = async (saleId) => {
         try {
-            console.log(saleId)
-            console.log(saleId)
+            // console.log(saleId)
+            // console.log(saleId)
             const res = await appClient(`/sale/sale-transaction/${saleId}`)
 
 

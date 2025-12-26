@@ -36,7 +36,7 @@ onMounted(async () => {
   try {
     await fetchAllSaleTransaction()
 
-    console.log(allSales.value)
+    // console.log(allSales.value)
   } catch (err) {
     console.error('Failed to fetch sales:', err)
   }
