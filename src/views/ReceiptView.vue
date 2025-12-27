@@ -46,9 +46,9 @@ onMounted(async () => {
         <tbody>
           <tr v-for="item in sale.items" :key="item.sku">
             <td>{{ item.name }}</td>
-            <td>{{ item.unitPrice }}</td>
+            <td>${{ item.unitPrice }}</td>
             <td>{{ item.quantity }}</td>
-            <td>{{ item.lineTotal }}</td>
+            <td>${{ item.lineTotal }}</td>
           </tr>
         </tbody>
       </v-table>
